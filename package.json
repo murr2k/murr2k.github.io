@@ -1,0 +1,13 @@
+{
+  "name": "blog-editor",
+  "version": "1.0.0",
+  "description": "Blog editor for Jekyll site",
+  "main": "blog-editor-server.js",
+  "scripts": {
+    "start-editor": "node blog-editor-server.js",
+    "dev": "jekyll serve & node blog-editor-server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

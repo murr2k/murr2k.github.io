@@ -1,0 +1,51 @@
+# Jekyll configuration for GitHub Pages
+title: Murray Kopit - Software Developer
+description: Software developer specializing in web applications and system design
+author: Murray Kopit
+email: murr2k@virginia.edu
+url: "https://murr2k.github.io"
+baseurl: ""
+
+# Build settings
+markdown: kramdown
+theme: null
+
+# Exclude files from Jekyll processing
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - preview.py
+  - CLAUDE.md
+  - README.md
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+
+# Include specific files that start with underscore
+include:
+  - .htaccess
+
+# Plugins
+plugins:
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+# SEO settings
+twitter:
+  username: murr2k
+  card: summary
+
+social:
+  name: Murray Kopit
+  links:
+    - https://github.com/murr2k
+    - https://linkedin.com/in/murray-kopit
+
+# Default settings
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: null

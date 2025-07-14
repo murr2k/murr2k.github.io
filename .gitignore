@@ -32,3 +32,13 @@ npm-debug.log*
 # Backup files
 *.backup
 *.bak
+
+# Jekyll files
+_site/
+.sass-cache/
+.jekyll-cache/
+.jekyll-metadata
+Gemfile.lock
+
+# Bundle directory
+vendor/

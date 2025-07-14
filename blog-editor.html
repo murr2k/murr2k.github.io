@@ -1,0 +1,185 @@
+---
+layout: default
+title: Blog Editor
+permalink: /blog-editor/
+---
+
+<div class="blog-editor">
+  <h1>Blog Editor</h1>
+  
+  <div class="security-warning">
+    <strong>⚠️ Warning:</strong> This editor is publicly accessible. For production use, implement proper authentication.
+  </div>
+
+  <div class="editor-container">
+    <h2>Create New Post</h2>
+    
+    <form id="blog-post-form">
+      <div class="form-group">
+        <label for="post-title">Title:</label>
+        <input type="text" id="post-title" name="title" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="post-date">Date:</label>
+        <input type="date" id="post-date" name="date" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="post-categories">Categories (comma-separated):</label>
+        <input type="text" id="post-categories" name="categories" placeholder="announcement, updates">
+      </div>
+      
+      <div class="form-group">
+        <label for="post-content">Content:</label>
+        <textarea id="post-content" name="content" rows="15" required></textarea>
+      </div>
+      
+      <div class="button-group">
+        <button type="submit" class="btn btn-primary">Save Post</button>
+        <button type="button" id="publish-btn" class="btn btn-success">Publish to Live Site</button>
+      </div>
+    </form>
+    
+    <div id="status-message"></div>
+  </div>
+
+  <div class="existing-posts">
+    <h2>Existing Posts</h2>
+    <ul id="posts-list">
+      {% for post in site.posts %}
+        <li>
+          <span>{{ post.date | date: "%Y-%m-%d" }}</span> - 
+          <a href="#" class="edit-post" data-filename="{{ post.path }}">{{ post.title }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+<style>
+.blog-editor {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.security-warning {
+  background-color: #fff3cd;
+  border: 1px solid #ffeeba;
+  color: #856404;
+  padding: 1rem;
+  margin-bottom: 2rem;
+  border-radius: 4px;
+}
+
+.editor-container {
+  background: #f8f9fa;
+  padding: 2rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.form-group textarea {
+  font-family: monospace;
+  resize: vertical;
+}
+
+.button-group {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.btn-success {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn-success:hover {
+  background-color: #218838;
+}
+
+#status-message {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 4px;
+  display: none;
+}
+
+#status-message.success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+#status-message.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.existing-posts {
+  background: #f8f9fa;
+  padding: 2rem;
+  border-radius: 8px;
+}
+
+.existing-posts ul {
+  list-style: none;
+  padding: 0;
+}
+
+.existing-posts li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.existing-posts a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.existing-posts a:hover {
+  text-decoration: underline;
+}
+</style>
+
+<script src="/js/blog-editor.js"></script>
