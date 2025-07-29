@@ -5,7 +5,13 @@
   "main": "blog-editor-server.js",
   "scripts": {
     "start-editor": "node blog-editor-server.js",
-    "dev": "jekyll serve & node blog-editor-server.js"
+    "dev": "jekyll serve & node blog-editor-server.js",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up",
+    "docker:down": "docker-compose down",
+    "docker:dev": "docker-compose up -d",
+    "docker:logs": "docker-compose logs -f",
+    "docker:rebuild": "docker-compose down && docker-compose build && docker-compose up"
   },
   "dependencies": {
     "express": "^4.18.2"

@@ -1,0 +1,38 @@
+services:
+  blog-editor:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3002:3002"
+    environment:
+      - NODE_ENV=development
+      - BLOG_EDITOR_USERNAME=${BLOG_EDITOR_USERNAME:-admin}
+      - BLOG_EDITOR_PASSWORD=${BLOG_EDITOR_PASSWORD:-changeme}
+      - GIT_CONFIG_COUNT=1
+      - GIT_CONFIG_KEY_0=safe.directory
+      - GIT_CONFIG_VALUE_0=/app/project
+    volumes:
+      # Mount the _posts directory for persistence
+      - ./_posts:/app/_posts
+      # Mount git config for publishing
+      - ~/.gitconfig:/root/.gitconfig:ro
+      - ~/.ssh:/root/.ssh:ro
+      # Mount the entire project for git operations
+      - .:/app/project
+    working_dir: /app/project
+    restart: unless-stopped
+
+  jekyll:
+    image: jekyll/jekyll:latest
+    command: jekyll serve --host 0.0.0.0 --watch --force_polling
+    ports:
+      - "4000:4000"
+    volumes:
+      - .:/srv/jekyll
+      - jekyll-cache:/usr/local/bundle
+    environment:
+      - JEKYLL_ENV=development
+
+volumes:
+  jekyll-cache:

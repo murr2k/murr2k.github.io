@@ -8,6 +8,7 @@ This is Murray Kopit's personal portfolio website - a static site hosted on GitH
 
 ## Development Commands
 
+### Traditional Setup
 ```bash
 # Start local development server with no-cache headers
 python preview.py
@@ -23,6 +24,27 @@ npm run start-editor
 
 # Start both Jekyll and blog editor
 npm run dev
+```
+
+### Docker Setup (Recommended)
+```bash
+# Build Docker images
+npm run docker:build
+
+# Start all services (Jekyll on port 4000, blog editor on port 3002)
+npm run docker:up
+
+# Start services in background
+npm run docker:dev
+
+# View logs
+npm run docker:logs
+
+# Stop services
+npm run docker:down
+
+# Rebuild and restart
+npm run docker:rebuild
 ```
 
 ## Architecture

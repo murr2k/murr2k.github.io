@@ -3,9 +3,8 @@ layout: post
 title: "Hello, World! Welcome to My Blog"
 date: 2025-07-29
 categories: [announcement, personal]
-excerpt: "After years of building software and solving problems, I'm finally starting a blog to share my journey, insights, and experiences in the world of technology."
+excerpt: "After years of building software and solving problems, Im finally starting a blog to share my journey, insights, and experiences in the world of technology."
 ---
-
 After years of building software and solving problems, I'm finally starting a blog to share my journey, insights, and experiences in the world of technology.
 
 ## Why Start a Blog Now?
@@ -50,7 +49,7 @@ I believe in the power of community and collaboration. This blog isn't just abou
 
 Feel free to:
 - Leave comments on posts
-- [Reach out via email](mailto:murr2k@gmail.com)
+- [Reach out via email](mailto:murr2k @gmail.com)
 - [Connect on LinkedIn](https://www.linkedin.com/in/murray-kopit/)
 - [Follow me on GitHub](https://github.com/murr2k)
 

@@ -1,6 +1,35 @@
 # Blog Editor Setup
 
-## Start the Blog Editor Server
+## Docker Setup (Recommended)
+
+### Quick Start
+```bash
+# Copy environment template
+cp .env.example .env
+# Edit .env to set your credentials
+
+# Build and start all services
+npm run docker:up
+
+# Or run in background
+npm run docker:dev
+```
+
+Access:
+- Blog editor: http://localhost:3002/blog-editor-standalone.html
+- Jekyll site: http://localhost:4000
+
+### Docker Commands
+```bash
+npm run docker:build    # Build images
+npm run docker:up       # Start services (foreground)
+npm run docker:dev      # Start services (background)
+npm run docker:down     # Stop services
+npm run docker:logs     # View logs
+npm run docker:rebuild  # Rebuild and restart
+```
+
+## Traditional Setup
 
 1. Start the Node.js server:
    ```bash
