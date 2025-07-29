@@ -24,6 +24,7 @@ Visit: [https://murr2k.github.io](https://murr2k.github.io)
 - Vanilla JavaScript
 - Jekyll (for blog functionality)
 - Node.js/Express (for blog editor & form handler)
+- Docker & Docker Compose (for containerized development)
 - GitHub Pages for hosting
 - Fly.io for form handler API
 - Font Awesome for icons
@@ -52,13 +53,42 @@ murr2k.github.io/
 
 ## 🔧 Local Development
 
+### 🐳 Docker Setup (Recommended)
+
 1. Clone the repository:
    ```bash
    git clone https://github.com/murr2k/murr2k.github.io.git
    cd murr2k.github.io
    ```
 
-2. Install dependencies:
+2. Set up environment:
+   ```bash
+   # Copy environment template
+   cp .env.example .env
+   
+   # Edit .env to set your credentials and GitHub token
+   # BLOG_EDITOR_USERNAME=your-username
+   # BLOG_EDITOR_PASSWORD=your-secure-password
+   # GITHUB_TOKEN=ghp_your-github-personal-access-token
+   ```
+
+3. Start with Docker:
+   ```bash
+   # Build and start all services
+   npm run docker:up
+   
+   # Or run in background
+   npm run docker:dev
+   ```
+
+4. Visit:
+   - Main site: `http://localhost:4000`
+   - Blog: `http://localhost:4000/blog/`
+   - Blog editor: `http://localhost:3002/blog-editor-standalone.html`
+
+### Traditional Setup
+
+1. Install dependencies:
    ```bash
    # Install Jekyll (requires Ruby)
    gem install jekyll bundler
@@ -67,7 +97,7 @@ murr2k.github.io/
    npm install
    ```
 
-3. Start development servers:
+2. Start development servers:
    ```bash
    # Option 1: Jekyll only
    jekyll serve
@@ -78,11 +108,6 @@ murr2k.github.io/
    # Option 3: Both Jekyll and blog editor
    npm run dev
    ```
-
-4. Visit:
-   - Main site: `http://localhost:4000`
-   - Blog: `http://localhost:4000/blog/`
-   - Blog editor: `http://localhost:4000/blog-editor/` (auth: admin/changeme)
 
 ## 📱 Responsive Breakpoints
 
@@ -103,23 +128,41 @@ murr2k.github.io/
 The site includes a Jekyll-powered blog with a web-based editor:
 
 - **Blog URL**: `/blog/`
-- **Editor URL**: `/blog-editor/` (requires authentication)
-- **Default credentials**: admin/changeme (⚠️ Change in production!)
+- **Editor URL**: `http://localhost:3002/blog-editor-standalone.html` (requires authentication)
+- **Authentication**: Set in `.env` file
 
 ### Writing Blog Posts
 
-1. Access the blog editor at `/blog-editor/`
-2. Fill in the post details (title, date, categories, content)
-3. Click "Save Post" to save locally
-4. Click "Publish to Live Site" to commit and push to GitHub
+1. Access the blog editor at `http://localhost:3002/blog-editor-standalone.html`
+2. Enter your credentials (set in `.env` file)
+3. Fill in the post details (title, date, categories, content)
+4. Click "Save Post" to save locally
+5. Click "Publish to GitHub" to commit and push to GitHub
 
-### Security Note
+### Security Configuration
 
-The blog editor uses basic authentication. For production use:
-- Change default credentials
-- Use environment variables for sensitive data
-- Implement proper authentication (OAuth, JWT)
-- Add HTTPS and access restrictions
+The blog editor requires authentication and a GitHub Personal Access Token:
+
+1. **Create GitHub Token**:
+   - Go to https://github.com/settings/tokens
+   - Generate new token with `repo` scope
+   - Add to `.env` file as `GITHUB_TOKEN`
+
+2. **Set Credentials**:
+   - Edit `.env` file
+   - Set `BLOG_EDITOR_USERNAME` and `BLOG_EDITOR_PASSWORD`
+   - Never commit `.env` to version control
+
+### Docker Commands
+
+```bash
+npm run docker:build    # Build images
+npm run docker:up       # Start services (foreground)
+npm run docker:dev      # Start services (background)
+npm run docker:down     # Stop services
+npm run docker:logs     # View logs
+npm run docker:rebuild  # Rebuild and restart
+```
 
 ## 📈 Future Enhancements
 

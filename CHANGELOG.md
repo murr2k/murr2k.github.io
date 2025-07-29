@@ -5,6 +5,40 @@ All notable changes to murr2k.github.io will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2025-07-29
+
+### Added
+- Docker containerization for blog editor and Jekyll
+- Docker Compose orchestration for development environment
+- Environment-based configuration system (.env file support)
+- GitHub Personal Access Token integration for blog publishing
+- Authentication prompts in blog editor UI
+- Graceful handling of publish operations with no changes
+- Docker npm scripts for easy container management
+- Comprehensive Docker documentation
+
+### Changed
+- Blog editor now runs in isolated Docker container
+- Moved from hardcoded credentials to environment variables
+- Updated blog editor to handle all publish scenarios:
+  - New commits to push
+  - Pending commits without new changes
+  - Everything up to date
+- Improved security with git safe.directory configuration
+- Blog editor accessible at port 3002 (separate from Jekyll)
+
+### Fixed
+- Git "dubious ownership" errors in Docker environment
+- Blog publish authentication failures
+- Static credential warning in blog editor UI
+- Proper error handling for all publish scenarios
+
+### Security
+- Removed default credentials from code
+- GitHub authentication via Personal Access Token
+- Credentials stored in environment variables
+- Git operations secured in containerized environment
+
 ## [1.0.0] - 2025-07-29
 
 ### Added
