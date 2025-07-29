@@ -201,29 +201,44 @@ app.post('/api/publish', basicAuth, async (req, res) => {
     // Git add all changes
     await execPromise('git add .');
     
-    // Git commit
+    // Try to commit
     const commitMessage = req.body.message || 'Update blog content';
-    await execPromise(`git commit -m "${commitMessage}"`);
+    let commitMade = false;
     
-    // Git push
-    const { stdout, stderr } = await execPromise('git push origin main');
+    try {
+      await execPromise(`git commit -m "${commitMessage}"`);
+      commitMade = true;
+    } catch (commitError) {
+      // If nothing to commit, that's okay - we might still have unpushed commits
+      if (!commitError.message.includes('nothing to commit')) {
+        throw commitError;
+      }
+    }
     
-    res.json({ 
-      success: true, 
-      message: 'Published successfully',
-      output: stdout || stderr
-    });
-  } catch (error) {
-    console.error('Error publishing:', error);
+    // Check if there are unpushed commits
+    const { stdout: unpushedCommits } = await execPromise('git rev-list HEAD...origin/main --count');
+    const unpushedCount = parseInt(unpushedCommits.trim()) || 0;
     
-    // Check if error is due to no changes
-    if (error.message.includes('nothing to commit')) {
-      return res.json({ 
-        success: false, 
-        message: 'No changes to publish',
-        error: error.message 
+    if (commitMade || unpushedCount > 0) {
+      // Git push
+      const { stdout, stderr } = await execPromise('git push origin main');
+      
+      res.json({ 
+        success: true, 
+        message: commitMade 
+          ? 'Published successfully' 
+          : `Pushed ${unpushedCount} pending commit${unpushedCount > 1 ? 's' : ''}`,
+        output: stdout || stderr
+      });
+    } else {
+      res.json({ 
+        success: true, 
+        message: 'Everything is already up to date',
+        info: 'No changes to commit and no pending commits to push'
       });
     }
+  } catch (error) {
+    console.error('Error publishing:', error);
     
     res.status(500).json({ 
       error: error.message,

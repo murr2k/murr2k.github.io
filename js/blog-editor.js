@@ -84,7 +84,10 @@ ${content}`;
             const result = await response.json();
             
             if (response.ok && result.success) {
-                showStatus('Changes published successfully!', 'success');
+                showStatus(result.message || 'Changes published successfully!', 'success');
+            } else if (response.ok && !result.success) {
+                // Handle cases where nothing changed but it's not an error
+                showStatus(result.message || 'No changes to publish', 'info');
             } else {
                 throw new Error(result.error || result.message || 'Failed to publish');
             }
