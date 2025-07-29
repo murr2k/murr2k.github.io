@@ -49,7 +49,7 @@ I believe in the power of community and collaboration. This blog isn't just abou
 
 Feel free to:
 - Leave comments on posts
-- [Reach out via email](mailto:murr2k @gmail.com)
+- [Reach out via email](mailto:murr2k @gmail.com )
 - [Connect on LinkedIn](https://www.linkedin.com/in/murray-kopit/)
 - [Follow me on GitHub](https://github.com/murr2k)
 
