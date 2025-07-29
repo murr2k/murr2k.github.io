@@ -14,7 +14,8 @@ Visit: [https://murr2k.github.io](https://murr2k.github.io)
 - **Fast Performance**: Optimized for speed and SEO
 - **Working Contact Form**: Sends real emails via custom form handler API
 - **Jekyll Blog**: Full-featured blog with Markdown support
-- **Blog Editor**: Web-based interface for creating and publishing blog posts
+- **Blog Editor**: Web-based interface for creating, editing, deleting, and publishing blog posts
+- **Docker Support**: Containerized development environment
 - **Form Handler API**: Secure email delivery without exposing API keys
 
 ## 🛠️ Technologies Used
@@ -138,6 +139,17 @@ The site includes a Jekyll-powered blog with a web-based editor:
 3. Fill in the post details (title, date, categories, content)
 4. Click "Save Post" to save locally
 5. Click "Publish to GitHub" to commit and push to GitHub
+
+### Managing Blog Posts
+
+The blog editor provides full post management capabilities:
+
+- **Create**: Use the Editor tab to write new posts
+- **Edit**: Click the "Edit" button on any post in the Existing Posts tab
+- **Delete**: Click the "Delete" button with confirmation dialog
+- **Publish**: Use the global "Publish to GitHub" button in the header
+
+**Important**: All changes (create, edit, delete) are local until you click "Publish to GitHub". The editor shows a reminder when you have unpublished changes.
 
 ### Security Configuration
 

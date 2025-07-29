@@ -5,6 +5,24 @@ All notable changes to murr2k.github.io will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2025-07-29
+
+### Added
+- Delete functionality for blog posts with confirmation dialog
+- Global "Publish to GitHub" button in header (always visible)
+- Visual reminder after changes to publish to GitHub
+- Delete buttons on each post in the Existing Posts tab
+- Automatic refresh of posts list after deletion
+
+### Changed
+- Improved publish confirmation message to clarify it syncs ALL changes
+- Blog editor UI now shows edit and delete actions for each post
+- Publish reminder appears after any change (save, edit, or delete)
+
+### Fixed
+- Users can now publish deletions from the Existing Posts tab
+- Clear indication when local changes need to be synced
+
 ## [2.0.0] - 2025-07-29
 
 ### Added
