@@ -12,9 +12,10 @@ Visit: [https://murr2k.github.io](https://murr2k.github.io)
 - **Modern UI/UX**: Clean, professional design with smooth animations
 - **Dynamic Content**: Automatically fetches latest GitHub projects
 - **Fast Performance**: Optimized for speed and SEO
-- **Contact Form**: Easy way to get in touch
+- **Working Contact Form**: Sends real emails via custom form handler API
 - **Jekyll Blog**: Full-featured blog with Markdown support
 - **Blog Editor**: Web-based interface for creating and publishing blog posts
+- **Form Handler API**: Secure email delivery without exposing API keys
 
 ## 🛠️ Technologies Used
 
@@ -22,8 +23,9 @@ Visit: [https://murr2k.github.io](https://murr2k.github.io)
 - CSS3 (with CSS Variables and Grid/Flexbox)
 - Vanilla JavaScript
 - Jekyll (for blog functionality)
-- Node.js/Express (for blog editor)
+- Node.js/Express (for blog editor & form handler)
 - GitHub Pages for hosting
+- Fly.io for form handler API
 - Font Awesome for icons
 - Google Fonts (Inter)
 

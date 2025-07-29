@@ -90,3 +90,47 @@ Simply edit files and refresh browser - no build step required. Use `python prev
 - Implement proper authentication before deploying
 - Consider using environment variables for sensitive data
 - Add HTTPS and access restrictions
+
+## Form Handler Integration
+
+### Overview
+The contact form is powered by a custom form handler API deployed on Fly.io. It sends emails via Gmail and requires no API keys in the public code.
+
+### Architecture
+- **API**: https://murr2k-form-handler.fly.dev
+- **Public Endpoint**: `/api/public/contact` (domain-validated, no API key needed)
+- **Email Provider**: Gmail with app-specific password
+- **Security**: Rate limiting, spam detection, CORS protection
+
+### Local Testing
+The form works on localhost (ports 8000, 8001) without modification.
+
+### Managing the Form Handler
+```bash
+# Check status
+cd form-handler
+fly status -a murr2k-form-handler
+
+# View logs
+fly logs -a murr2k-form-handler
+
+# Update secrets (e.g., change email password)
+fly secrets set GMAIL_APP_PASSWORD="new-password" -a murr2k-form-handler
+```
+
+### Troubleshooting Form Submissions
+1. **Check logs**: `fly logs -a murr2k-form-handler`
+2. **Verify health**: https://murr2k-form-handler.fly.dev/health
+3. **Test from CLI**:
+   ```bash
+   curl -X POST "https://murr2k-form-handler.fly.dev/api/public/contact" \
+     -H "Content-Type: application/json" \
+     -H "Origin: https://murr2k.github.io" \
+     -d '{"name":"Test","email":"test@example.com","message":"Test message"}'
+   ```
+
+### Adding New Domains
+To allow form submissions from additional domains:
+1. Edit `form-handler/src/routes/public.js`
+2. Add domain to `allowedDomains` array
+3. Deploy: `cd form-handler && fly deploy`
