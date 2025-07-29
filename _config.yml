@@ -22,6 +22,15 @@ exclude:
   - vendor/cache/
   - vendor/gems/
   - vendor/ruby/
+  - form-handler/
+  - backup-*/
+  - "*.sh"
+  - package.json
+  - package-lock.json
+  - blog-editor-server.js
+  - api/
+  - CHANGELOG.md
+  - README-blog-editor.md
 
 # Include specific files that start with underscore
 include:

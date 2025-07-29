@@ -4,17 +4,24 @@ title: Blog
 permalink: /blog/
 ---
 
-<div class="blog">
+<div class="blog-header">
   <h1>Blog</h1>
-  
-  <ul class="post-list">
-    {% for post in site.posts %}
-      <li>
-        <span class="post-meta">{{ post.date | date: "%B %d, %Y" }}</span>
-        <h2>
-          <a class="post-link" href="{{ post.url | relative_url }}">{{ post.title }}</a>
-        </h2>
-      </li>
-    {% endfor %}
-  </ul>
+  <p>Thoughts on software engineering, AI, and building the future</p>
+</div>
+
+<div class="post-list">
+  {% for post in site.posts %}
+    <article class="post-item">
+      <time class="post-meta">{{ post.date | date: "%B %d, %Y" }}</time>
+      <h2 class="post-title">
+        <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+      </h2>
+      {% if post.excerpt %}
+        <p class="post-excerpt">{{ post.excerpt | strip_html | truncate: 200 }}</p>
+      {% endif %}
+      <a href="{{ post.url | relative_url }}" class="read-more">
+        Read more →
+      </a>
+    </article>
+  {% endfor %}
 </div>
