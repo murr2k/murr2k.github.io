@@ -41,7 +41,8 @@
       "Bash(docker run:*)",
       "Bash(docker rm:*)",
       "Bash(docker exec:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(gh release create:*)"
     ],
     "deny": []
   }

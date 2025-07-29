@@ -262,6 +262,39 @@ app.post('/api/publish', basicAuth, async (req, res) => {
   }
 });
 
+// Delete post endpoint
+app.delete('/api/delete-post/:filename', basicAuth, async (req, res) => {
+  try {
+    const { filename } = req.params;
+    
+    // Sanitize filename
+    const sanitizedFilename = filename.replace(/[^a-zA-Z0-9\-_.]/g, '');
+    const filePath = path.join(__dirname, '_posts', sanitizedFilename);
+    
+    // Check if file exists
+    try {
+      await fs.access(filePath);
+    } catch {
+      return res.status(404).json({ error: 'Post not found' });
+    }
+    
+    // Delete the file
+    await fs.unlink(filePath);
+    
+    res.json({ 
+      success: true, 
+      message: 'Post deleted successfully',
+      filename: sanitizedFilename
+    });
+  } catch (error) {
+    console.error('Error deleting post:', error);
+    res.status(500).json({ 
+      error: error.message,
+      details: 'Failed to delete post'
+    });
+  }
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`Blog editor server running on http://localhost:${PORT}`);
