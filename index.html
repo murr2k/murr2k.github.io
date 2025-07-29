@@ -3,248 +3,401 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Murray Kopit - Embedded Systems Developer Portfolio">
-    <meta name="keywords" content="Murray Kopit, Embedded Systems Developer, Firmware Engineer, murr2k">
-    <meta name="author" content="Murray Kopit">
-    
-    <title>Murray Kopit - Embedded Systems Developer</title>
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
-    <link rel="alternate icon" href="/assets/favicon.ico">
-    
-    <!-- CSS -->
+    <title>Murray Kopit - Software Engineer & Technology Leader</title>
+    <meta name="description" content="Murray Kopit - Software Engineer specializing in AI-augmented development, IoT systems, and cloud infrastructure. Building the future, one line of code at a time.">
+    <meta property="og:title" content="Murray Kopit - Software Engineer & Technology Leader">
+    <meta property="og:description" content="Building innovative solutions with AI, IoT, and cloud technologies.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://murraykopit.com">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="container">
-            <div class="nav-brand">
-                <a href="/">MK</a>
+    <header>
+        <nav>
+            <div class="container">
+                <a href="#home" class="logo">MK</a>
+                <ul class="nav-links">
+                    <li><a href="#home" class="nav-link">Home</a></li>
+                    <li><a href="#expertise" class="nav-link">Expertise</a></li>
+                    <li><a href="#services" class="nav-link">Services</a></li>
+                    <li><a href="#projects" class="nav-link">Projects</a></li>
+                    <li><a href="#about" class="nav-link">About</a></li>
+                    <li><a href="#contact" class="nav-link">Contact</a></li>
+                </ul>
+                <button class="mobile-menu-toggle" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
             </div>
-            <button class="nav-toggle" id="navToggle">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-            <ul class="nav-menu" id="navMenu">
-                <li><a href="#home" class="nav-link">Home</a></li>
-                <li><a href="#about" class="nav-link">About</a></li>
-                <li><a href="#projects" class="nav-link">Projects</a></li>
-                <li><a href="#skills" class="nav-link">Skills</a></li>
-                <li><a href="#contact" class="nav-link">Contact</a></li>
-                <li><a href="/blog" class="nav-link">Blog</a></li>
-            </ul>
-        </div>
-    </nav>
+        </nav>
+    </header>
 
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1 class="hero-title animate-fade-in">
-                    Hi, I'm <span class="text-gradient">Murray Kopit</span>
-                </h1>
-                <p class="hero-subtitle animate-fade-in-delay">
-                    Embedded Systems Developer | Problem Solver | Tech Enthusiast
-                </p>
-                <p class="hero-description animate-fade-in-delay-2">
-                    I build innovative hardware and love turning ideas into reality through code.
-                </p>
-                <div class="hero-buttons animate-fade-in-delay-3">
-                    <a href="#projects" class="btn btn-primary">View My Work</a>
-                    <a href="#contact" class="btn btn-outline">Get In Touch</a>
-                </div>
-                <div class="hero-socials animate-fade-in-delay-4">
-                    <a href="https://github.com/murr2k" target="_blank" aria-label="GitHub">
-                        <i class="fab fa-github"></i>
-                    </a>
-                    <a href="https://linkedin.com/in/murr2k" target="_blank" aria-label="LinkedIn">
-                        <i class="fab fa-linkedin"></i>
-                    </a>
-                    <a href="https://twitter.com/murr2k" target="_blank" aria-label="Twitter">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                    <a href="mailto:contact@murraykopit.com" aria-label="Email">
-                        <i class="fas fa-envelope"></i>
-                    </a>
-                </div>
-            </div>
-            <div class="hero-image">
-                <div class="hero-shape">
-                    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                        <path fill="#3b82f6" d="M47.5,-57.6C59.9,-50.3,67.3,-34.5,69.8,-18.2C72.3,-1.9,69.9,14.9,63.1,29.7C56.3,44.5,45.1,57.3,30.6,63.5C16.1,69.7,-1.7,69.3,-19.3,64.3C-36.9,59.3,-54.3,49.7,-64.4,35.2C-74.5,20.7,-77.3,1.3,-73.4,-16.2C-69.5,-33.7,-58.9,-49.3,-44.9,-56.2C-30.9,-63.1,-13.4,-61.3,2.3,-64.1C18,-66.9,35.1,-64.9,47.5,-57.6Z" transform="translate(100 100)" />
-                    </svg>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="about">
-        <div class="container">
-            <h2 class="section-title">About Me</h2>
-            <div class="about-content">
-                <div class="about-text">
-                    <p>
-                        I'm a passionate Embedded Systems Developer with expertise in building novel physical solutions. 
-                        I love working with modern technologies and solving complex problems.
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <div class="hero-background"></div>
+            <div class="container">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        <span class="hero-greeting">Hello, I'm</span>
+                        <span class="hero-name">Murray Kopit</span>
+                    </h1>
+                    <p class="hero-tagline">
+                        Software Engineer crafting intelligent solutions from 
+                        <span class="highlight">Embedded Systems</span> to 
+                        <span class="highlight">Cloud</span>, 
+                        <span class="highlight">Mobile</span> to 
+                        <span class="highlight">AI</span>
                     </p>
-                    <p>
-                        My journey in tech started at age 6 on the kitchen table with curiosity about how things work, 
-                        and it has evolved into a career focused on creating impactful digital solutions.
-                    </p>
-                    <p>
-                        When I'm not coding, you can find me exploring new technologies, contributing to open source, 
-                        or sharing my knowledge through blog posts and tutorials.
-                    </p>
+                    <div class="hero-cta">
+                        <a href="#projects" class="btn btn-primary">View My Work</a>
+                        <a href="#contact" class="btn btn-secondary">Get In Touch</a>
+                    </div>
+                    <div class="hero-stats">
+                        <div class="stat">
+                            <span class="stat-number">15+</span>
+                            <span class="stat-label">Years Experience</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">100+</span>
+                            <span class="stat-label">Projects Delivered</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">∞</span>
+                            <span class="stat-label">Lines of Code</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="about-stats">
-                    <div class="stat">
-                        <div class="stat-number">20+</div>
-                        <div class="stat-label">Years Experience</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number">60+</div>
-                        <div class="stat-label">Projects Completed</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number">20+</div>
-                        <div class="stat-label">Happy Clients</div>
-                    </div>
+                <div class="scroll-indicator">
+                    <span></span>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Projects Section -->
-    <section id="projects" class="projects">
-        <div class="container">
-            <h2 class="section-title">Featured Projects</h2>
-            <div class="projects-grid" id="projectsGrid">
-                <!-- Projects will be loaded dynamically -->
-                <div class="project-card skeleton">
-                    <div class="project-image skeleton-box"></div>
-                    <div class="project-content">
-                        <h3 class="skeleton-text"></h3>
-                        <p class="skeleton-text"></p>
+        <!-- Expertise Section -->
+        <section id="expertise" class="expertise">
+            <div class="container">
+                <h2 class="section-title">Core Expertise</h2>
+                <p class="section-subtitle">Transforming complex challenges into elegant solutions</p>
+                <div class="expertise-grid">
+                    <div class="expertise-card">
+                        <div class="expertise-icon">🤖</div>
+                        <h3>AI-Augmented Development</h3>
+                        <p>Leveraging cutting-edge AI tools and LLMs to accelerate development cycles and enhance code quality.</p>
+                        <ul class="tech-stack">
+                            <li>Claude AI</li>
+                            <li>GitHub Copilot</li>
+                            <li>GPT-4</li>
+                            <li>LangChain</li>
+                        </ul>
+                    </div>
+                    <div class="expertise-card">
+                        <div class="expertise-icon">📱</div>
+                        <h3>Mobile App Development</h3>
+                        <p>Creating native and cross-platform mobile applications for Android and iOS with exceptional user experiences.</p>
+                        <ul class="tech-stack">
+                            <li>Swift/SwiftUI</li>
+                            <li>Kotlin/Jetpack</li>
+                            <li>React Native</li>
+                            <li>Flutter</li>
+                        </ul>
+                    </div>
+                    <div class="expertise-card">
+                        <div class="expertise-icon">🔧</div>
+                        <h3>Embedded Systems & Rapid Prototyping</h3>
+                        <p>End-to-end product development from ideation to production, integrating hardware, firmware, and software solutions.</p>
+                        <ul class="tech-stack">
+                            <li>ESP32/STM32</li>
+                            <li>Arduino/Pi</li>
+                            <li>C/C++</li>
+                            <li>PCB Design</li>
+                        </ul>
+                    </div>
+                    <div class="expertise-card">
+                        <div class="expertise-icon">🌐</div>
+                        <h3>IoT & Energy Systems</h3>
+                        <p>Building smart energy monitoring solutions and IoT platforms that scale from home to enterprise.</p>
+                        <ul class="tech-stack">
+                            <li>MQTT</li>
+                            <li>Grafana</li>
+                            <li>InfluxDB</li>
+                            <li>Modbus</li>
+                        </ul>
+                    </div>
+                    <div class="expertise-card">
+                        <div class="expertise-icon">☁️</div>
+                        <h3>Cloud Infrastructure</h3>
+                        <p>Architecting resilient, scalable cloud solutions with modern DevOps practices and automation.</p>
+                        <ul class="tech-stack">
+                            <li>AWS/GCP</li>
+                            <li>Docker</li>
+                            <li>Kubernetes</li>
+                            <li>Terraform</li>
+                        </ul>
+                    </div>
+                    <div class="expertise-card">
+                        <div class="expertise-icon">🚀</div>
+                        <h3>Full-Stack Development</h3>
+                        <p>Creating seamless experiences from database to user interface with modern frameworks and tools.</p>
+                        <ul class="tech-stack">
+                            <li>React/Vue</li>
+                            <li>Node.js</li>
+                            <li>Python</li>
+                            <li>PostgreSQL</li>
+                        </ul>
                     </div>
                 </div>
             </div>
-            <div class="projects-more">
-                <a href="https://github.com/murr2k" target="_blank" class="btn btn-outline">
-                    View More on GitHub <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Skills Section -->
-    <section id="skills" class="skills">
-        <div class="container">
-            <h2 class="section-title">Skills & Technologies</h2>
-            <div class="skills-categories">
-                <div class="skill-category">
-                    <h3><i class="fas fa-laptop-code"></i> Frontend</h3>
-                    <div class="skill-tags">
-                        <span class="skill-tag">HTML5</span>
-                        <span class="skill-tag">CSS3</span>
-                        <span class="skill-tag">JavaScript</span>
-                        <span class="skill-tag">React</span>
-                        <span class="skill-tag">Vue.js</span>
-                        <span class="skill-tag">TypeScript</span>
-                        <span class="skill-tag">Tailwind CSS</span>
+        <!-- Services Section -->
+        <section id="services" class="services">
+            <div class="container">
+                <h2 class="section-title">Services I Offer</h2>
+                <p class="section-subtitle">Comprehensive solutions backed by 137M+ lines of code experience</p>
+                <div class="services-grid">
+                    <div class="service-category">
+                        <div class="service-icon">💻</div>
+                        <h3>Full-Stack Development</h3>
+                        <ul class="service-list">
+                            <li>Modern web applications with React, Vue, Node.js</li>
+                            <li>RESTful APIs and GraphQL services</li>
+                            <li>Real-time applications with WebSockets</li>
+                            <li>Database design and optimization</li>
+                        </ul>
+                    </div>
+                    <div class="service-category">
+                        <div class="service-icon">☁️</div>
+                        <h3>Cloud & DevOps</h3>
+                        <ul class="service-list">
+                            <li>Cloud deployment (Fly.io, AWS, GCP)</li>
+                            <li>Docker containerization & Kubernetes</li>
+                            <li>CI/CD pipeline implementation</li>
+                            <li>Infrastructure as Code (Terraform)</li>
+                        </ul>
+                    </div>
+                    <div class="service-category">
+                        <div class="service-icon">🔒</div>
+                        <h3>Security Services</h3>
+                        <ul class="service-list">
+                            <li>Security audits & vulnerability assessment</li>
+                            <li>CSP and CORS implementation</li>
+                            <li>Authentication & authorization systems</li>
+                            <li>Docker security hardening</li>
+                        </ul>
+                    </div>
+                    <div class="service-category">
+                        <div class="service-icon">📱</div>
+                        <h3>Mobile & Embedded</h3>
+                        <ul class="service-list">
+                            <li>Android & iOS native development</li>
+                            <li>React Native & Flutter apps</li>
+                            <li>IoT device integration (ESP32, Arduino)</li>
+                            <li>Firmware development in C/C++ & Rust</li>
+                        </ul>
+                    </div>
+                    <div class="service-category">
+                        <div class="service-icon">🤖</div>
+                        <h3>AI & Automation</h3>
+                        <ul class="service-list">
+                            <li>LLM integration (Claude, GPT-4)</li>
+                            <li>Process automation with Python</li>
+                            <li>Testing automation (Playwright, E2E)</li>
+                            <li>Custom AI-powered solutions</li>
+                        </ul>
+                    </div>
+                    <div class="service-category">
+                        <div class="service-icon">📊</div>
+                        <h3>Data & Monitoring</h3>
+                        <ul class="service-list">
+                            <li>Real-time dashboards with Grafana</li>
+                            <li>Time-series data processing (InfluxDB)</li>
+                            <li>Custom monitoring solutions</li>
+                            <li>Data visualization & analytics</li>
+                        </ul>
                     </div>
                 </div>
-                <div class="skill-category">
-                    <h3><i class="fas fa-server"></i> Backend</h3>
-                    <div class="skill-tags">
-                        <span class="skill-tag">Node.js</span>
-                        <span class="skill-tag">Python</span>
-                        <span class="skill-tag">Express.js</span>
-                        <span class="skill-tag">Django</span>
-                        <span class="skill-tag">PostgreSQL</span>
-                        <span class="skill-tag">MongoDB</span>
-                        <span class="skill-tag">Redis</span>
-                    </div>
+                <div class="services-cta">
+                    <h3>Ready to Build Something Amazing?</h3>
+                    <p>From proof of concept to enterprise deployment, I deliver end-to-end solutions.</p>
+                    <a href="#contact" class="btn btn-primary">Discuss Your Project</a>
                 </div>
-                <div class="skill-category">
-                    <h3><i class="fas fa-tools"></i> DevOps & Tools</h3>
-                    <div class="skill-tags">
-                        <span class="skill-tag">Docker</span>
-                        <span class="skill-tag">Kubernetes</span>
-                        <span class="skill-tag">AWS</span>
-                        <span class="skill-tag">Git</span>
-                        <span class="skill-tag">CI/CD</span>
-                        <span class="skill-tag">Linux</span>
-                        <span class="skill-tag">Nginx</span>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="projects">
+            <div class="container">
+                <h2 class="section-title">Featured Projects</h2>
+                <p class="section-subtitle">A selection of my recent work</p>
+                <div class="projects-grid">
+                    <article class="project-card featured">
+                        <div class="project-image">
+                            <div class="project-placeholder">🌐</div>
+                        </div>
+                        <div class="project-content">
+                            <span class="project-category">IoT Platform</span>
+                            <h3>Linknode Energy Monitor</h3>
+                            <p>Real-time energy monitoring system with cloud analytics, supporting 1000+ devices across multiple sites.</p>
+                            <div class="project-tech">
+                                <span>Python</span>
+                                <span>Grafana</span>
+                                <span>Docker</span>
+                                <span>MQTT</span>
+                            </div>
+                            <a href="https://linknode.com" target="_blank" class="project-link">View Project →</a>
+                        </div>
+                    </article>
+                    <article class="project-card">
+                        <div class="project-image">
+                            <div class="project-placeholder">🛠️</div>
+                        </div>
+                        <div class="project-content">
+                            <span class="project-category">Developer Tool</span>
+                            <h3>Website Manager CLI</h3>
+                            <p>Comprehensive CLI tool for managing multiple Fly.io websites with Git integration.</p>
+                            <div class="project-tech">
+                                <span>Bash</span>
+                                <span>Git</span>
+                                <span>Docker</span>
+                            </div>
+                            <a href="https://github.com/murr2k/website-manager" class="project-link">View on GitHub →</a>
+                        </div>
+                    </article>
+                    <article class="project-card">
+                        <div class="project-image">
+                            <div class="project-placeholder">🔌</div>
+                        </div>
+                        <div class="project-content">
+                            <span class="project-category">Embedded Systems</span>
+                            <h3>IoT Product Platform</h3>
+                            <p>Complete product development from concept to production, including hardware design, firmware, and cloud integration.</p>
+                            <div class="project-tech">
+                                <span>ESP32</span>
+                                <span>C++</span>
+                                <span>PCB Design</span>
+                                <span>AWS IoT</span>
+                            </div>
+                            <a href="#" class="project-link">View Details →</a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="about">
+            <div class="container">
+                <div class="about-content">
+                    <div class="about-text">
+                        <h2 class="section-title">About Me</h2>
+                        <p class="lead">
+                            I'm a software engineer passionate about building solutions that matter. 
+                            With over a decade of experience, I specialize in creating scalable systems 
+                            that bridge the gap between cutting-edge technology and real-world applications.
+                        </p>
+                        <p>
+                            My journey in tech has taken me from embedded systems to cloud architectures, 
+                            always with a focus on clean code, user experience, and measurable impact. 
+                            I believe in the power of technology to solve complex problems and improve lives.
+                        </p>
+                        <p>
+                            When I'm not coding, you'll find me exploring new technologies, contributing to 
+                            open source, or sharing knowledge with the developer community.
+                        </p>
+                        <div class="about-buttons">
+                            <a href="/resume.pdf" class="btn btn-primary">Download Resume</a>
+                            <a href="https://github.com/murr2k" class="btn btn-secondary">GitHub Profile</a>
+                        </div>
+                    </div>
+                    <div class="about-image">
+                        <div class="image-placeholder">
+                            <span>MK</span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="contact">
-        <div class="container">
-            <h2 class="section-title">Get In Touch</h2>
-            <div class="contact-content">
-                <p class="contact-text">
-                    I'm always interested in hearing about new projects and opportunities. 
-                    Whether you have a question or just want to say hi, feel free to reach out!
-                </p>
-                <div class="contact-links">
-                    <a href="mailto:contact@murraykopit.com" class="contact-link">
-                        <i class="fas fa-envelope"></i>
-                        contact@murraykopit.com
-                    </a>
-                    <a href="https://linkedin.com/in/murr2k" target="_blank" class="contact-link">
-                        <i class="fab fa-linkedin"></i>
-                        LinkedIn
-                    </a>
-                    <a href="https://github.com/murr2k" target="_blank" class="contact-link">
-                        <i class="fab fa-github"></i>
-                        GitHub
-                    </a>
-                </div>
-                <div class="contact-form-wrapper">
-                    <form class="contact-form" id="contactForm">
+        <!-- Contact Section -->
+        <section id="contact" class="contact">
+            <div class="container">
+                <h2 class="section-title">Let's Connect</h2>
+                <p class="section-subtitle">Have a project in mind? Let's discuss how we can work together.</p>
+                <div class="contact-content">
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <span class="contact-icon">📧</span>
+                            <div>
+                                <h3>Email</h3>
+                                <a href="mailto:murr2k@gmail.com">murr2k@gmail.com</a>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <span class="contact-icon">💼</span>
+                            <div>
+                                <h3>LinkedIn</h3>
+                                <a href="https://linkedin.com/in/murr2k" target="_blank">linkedin.com/in/murr2k</a>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <span class="contact-icon">🐙</span>
+                            <div>
+                                <h3>GitHub</h3>
+                                <a href="https://github.com/murr2k" target="_blank">github.com/murr2k</a>
+                            </div>
+                        </div>
+                    </div>
+                    <form class="contact-form" id="contact-form">
                         <div class="form-group">
-                            <input type="text" name="name" placeholder="Your Name" required>
+                            <label for="name">Name</label>
+                            <input type="text" id="name" name="name" required>
                         </div>
                         <div class="form-group">
-                            <input type="email" name="email" placeholder="Your Email" required>
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required>
                         </div>
                         <div class="form-group">
-                            <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message" rows="5" required></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary">
-                            Send Message <i class="fas fa-paper-plane"></i>
-                        </button>
+                        <button type="submit" class="btn btn-primary">Send Message</button>
                     </form>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </main>
 
-    <!-- Footer -->
-    <footer class="footer">
+    <footer>
         <div class="container">
             <div class="footer-content">
-                <p>&copy; 2024 Murray Kopit. All rights reserved.</p>
-                <p>Built with <i class="fas fa-heart"></i> and deployed on GitHub Pages</p>
+                <p>&copy; 2025 Murray Kopit. All rights reserved.</p>
+                <div class="social-links">
+                    <a href="https://github.com/murr2k" aria-label="GitHub">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                    </a>
+                    <a href="https://linkedin.com/in/murr2k" aria-label="LinkedIn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                        </svg>
+                    </a>
+                    <a href="mailto:murr2k@gmail.com" aria-label="Email">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 12.713l-11.985-9.713h23.971l-11.986 9.713zm-5.425-1.822l-6.575-5.329v12.501l6.575-7.172zm10.85 0l6.575 7.172v-12.501l-6.575 5.329zm-1.557 1.261l-3.868 3.135-3.868-3.135-8.11 8.848h23.956l-8.11-8.848z"/>
+                        </svg>
+                    </a>
+                </div>
             </div>
         </div>
     </footer>
 
-    <!-- Scripts -->
-    <script src="js/main.js"></script>
+    <script src="js/main.js?v=4"></script>
 </body>
 </html>
