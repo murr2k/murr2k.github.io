@@ -227,7 +227,7 @@
     <div class="container">
         <h1>Blog Editor</h1>
         
-        <div class="warning" id="credentials-warning">
+        <div class="warning" id="credentials-warning" style="display: none;">
             ⚠️ <strong>Warning:</strong> Using default credentials. Set environment variables for production security.
         </div>
         
@@ -419,11 +419,17 @@
             ].filter(line => line !== '').join('\n');
             
             try {
+                const credentials = getCredentials();
+                if (!credentials) {
+                    showMessage('Authentication required', 'error');
+                    return;
+                }
+                
                 const response = await fetch('/api/save-post', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': 'Basic ' + btoa(getCredentials())
+                        'Authorization': 'Basic ' + btoa(credentials)
                     },
                     body: JSON.stringify({ filename, content: frontMatter })
                 });
@@ -546,8 +552,16 @@
             const stored = sessionStorage.getItem('blog-editor-auth');
             if (stored) return stored;
             
-            // Default credentials for development
-            return 'admin:changeme';
+            // Prompt for credentials
+            const username = prompt('Enter username:');
+            if (!username) return null;
+            
+            const password = prompt('Enter password:');
+            if (!password) return null;
+            
+            const credentials = username + ':' + password;
+            sessionStorage.setItem('blog-editor-auth', credentials);
+            return credentials;
         }
         
         // Check if using custom auth and update warning
