@@ -24,7 +24,7 @@ app.use((req, res, next) => {
 });
 
 // Basic authentication middleware
-const basicAuth = (req, res, next) => {
+const authenticate = basicAuth = (req, res, next) => {
   const authHeader = req.headers.authorization;
   
   if (!authHeader || !authHeader.startsWith('Basic ')) {
@@ -35,8 +35,11 @@ const basicAuth = (req, res, next) => {
   const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
   const [username, password] = credentials.split(':');
   
-  // In production, use environment variables or secure storage
-  if (username === 'admin' && password === 'changeme') {
+  // Use environment variables for credentials, with defaults for development
+  const BLOG_EDITOR_USERNAME = process.env.BLOG_EDITOR_USERNAME || 'admin';
+  const BLOG_EDITOR_PASSWORD = process.env.BLOG_EDITOR_PASSWORD || 'changeme';
+  
+  if (username === BLOG_EDITOR_USERNAME && password === BLOG_EDITOR_PASSWORD) {
     next();
   } else {
     res.status(401).json({ error: 'Invalid credentials' });
@@ -84,7 +87,7 @@ app.get('/api/get-post/:filename', basicAuth, async (req, res) => {
   }
 });
 
-// List posts endpoint
+// List posts endpoint (original)
 app.get('/api/list-posts', basicAuth, async (req, res) => {
   try {
     const postsDir = path.join(__dirname, '_posts');
@@ -94,6 +97,101 @@ app.get('/api/list-posts', basicAuth, async (req, res) => {
   } catch (error) {
     console.error('Error listing posts:', error);
     res.status(500).json({ error: error.message });
+  }
+});
+
+// Get all posts with metadata
+app.get('/api/posts', authenticate, async (req, res) => {
+  try {
+    const postsDir = path.join(__dirname, '_posts');
+    await fs.mkdir(postsDir, { recursive: true }); // Ensure directory exists
+    
+    const files = await fs.readdir(postsDir);
+    
+    const posts = await Promise.all(
+      files
+        .filter(file => file.endsWith('.md'))
+        .map(async (file) => {
+          const content = await fs.readFile(path.join(postsDir, file), 'utf-8');
+          const lines = content.split('\n');
+          
+          // Extract front matter
+          let title = '';
+          let date = '';
+          let categories = '';
+          
+          for (let i = 0; i < lines.length; i++) {
+            if (lines[i].startsWith('title:')) {
+              title = lines[i].replace('title:', '').trim().replace(/['"]/g, '');
+            }
+            if (lines[i].startsWith('date:')) {
+              date = lines[i].replace('date:', '').trim();
+            }
+            if (lines[i].startsWith('categories:')) {
+              categories = lines[i].replace('categories:', '').trim();
+            }
+            if (lines[i] === '---' && i > 0) break;
+          }
+          
+          return { filename: file, title, date, categories };
+        })
+    );
+    
+    res.json(posts.sort((a, b) => new Date(b.date) - new Date(a.date)));
+  } catch (error) {
+    console.error('Error listing posts:', error);
+    res.status(500).send('Failed to list posts');
+  }
+});
+
+// Get a specific post
+app.get('/api/posts/:filename', authenticate, async (req, res) => {
+  try {
+    const filename = req.params.filename;
+    const filePath = path.join(__dirname, '_posts', filename);
+    
+    const content = await fs.readFile(filePath, 'utf-8');
+    const lines = content.split('\n');
+    
+    // Parse front matter
+    let inFrontMatter = false;
+    let frontMatterEnd = 0;
+    let title = '', date = '', categories = '', excerpt = '';
+    
+    for (let i = 0; i < lines.length; i++) {
+      if (lines[i] === '---') {
+        if (!inFrontMatter) {
+          inFrontMatter = true;
+        } else {
+          frontMatterEnd = i + 1;
+          break;
+        }
+      } else if (inFrontMatter) {
+        if (lines[i].startsWith('title:')) {
+          title = lines[i].replace('title:', '').trim().replace(/['"]/g, '');
+        } else if (lines[i].startsWith('date:')) {
+          date = lines[i].replace('date:', '').trim();
+        } else if (lines[i].startsWith('categories:')) {
+          categories = lines[i].replace('categories:', '').trim()
+            .replace(/[\[\]]/g, '').split(',').map(c => c.trim()).join(', ');
+        } else if (lines[i].startsWith('excerpt:')) {
+          excerpt = lines[i].replace('excerpt:', '').trim().replace(/['"]/g, '');
+        }
+      }
+    }
+    
+    const postContent = lines.slice(frontMatterEnd).join('\n').trim();
+    
+    res.json({
+      title,
+      date,
+      categories,
+      excerpt,
+      content: postContent
+    });
+  } catch (error) {
+    console.error('Error reading post:', error);
+    res.status(404).send('Post not found');
   }
 });
 
@@ -137,6 +235,13 @@ app.post('/api/publish', basicAuth, async (req, res) => {
 // Start server
 app.listen(PORT, () => {
   console.log(`Blog editor server running on http://localhost:${PORT}`);
-  console.log('Default credentials: admin / changeme');
-  console.log('Remember to change these in production!');
+  
+  // Show security warning if using default credentials
+  if (!process.env.BLOG_EDITOR_USERNAME || !process.env.BLOG_EDITOR_PASSWORD) {
+    console.log('\n⚠️  WARNING: Using default credentials (admin/changeme)');
+    console.log('Set BLOG_EDITOR_USERNAME and BLOG_EDITOR_PASSWORD environment variables for production!');
+    console.log('Example: BLOG_EDITOR_USERNAME=myuser BLOG_EDITOR_PASSWORD=mysecurepass node blog-editor-server.js\n');
+  } else {
+    console.log('✓ Using custom credentials from environment variables');
+  }
 });

@@ -4,18 +4,22 @@
 
 1. Start the Node.js server:
    ```bash
+   # With default credentials (development only)
    npm run start-editor
+   
+   # With custom credentials (recommended)
+   BLOG_EDITOR_USERNAME=myuser BLOG_EDITOR_PASSWORD=mypass npm run start-editor
    ```
    Or start both Jekyll and the editor server:
    ```bash
    npm run dev
    ```
 
-2. Access the blog editor at: http://localhost:4000/blog-editor/
+2. Access the blog editor at: http://localhost:3002/blog-editor-standalone.html
 
-3. Login with default credentials:
-   - Username: `admin`
-   - Password: `changeme`
+3. Login credentials:
+   - Default: `admin` / `changeme` (development only)
+   - Custom: Set via environment variables
 
 ## Features
 
@@ -25,13 +29,33 @@
 - Basic authentication (change credentials in production!)
 - List of existing posts
 
-## Security Notes
+## Security Configuration
 
-⚠️ **Important**: The current setup uses basic authentication with hardcoded credentials. For production use:
-- Use environment variables for credentials
-- Implement proper authentication (OAuth, JWT, etc.)
-- Add HTTPS
-- Restrict access by IP or use a VPN
+### Setting Custom Credentials
+
+The blog editor uses environment variables for authentication:
+
+```bash
+# Method 1: Direct environment variables
+BLOG_EDITOR_USERNAME=myusername BLOG_EDITOR_PASSWORD=mysecurepassword node blog-editor-server.js
+
+# Method 2: Using .env file
+cp .env.example .env
+# Edit .env with your credentials, then:
+npm install dotenv  # if not already installed
+node -r dotenv/config blog-editor-server.js
+```
+
+### Security Best Practices
+
+⚠️ **Important**: Never use default credentials in production!
+
+- **Always** set custom credentials via environment variables
+- Use HTTPS in production environments
+- Consider implementing OAuth or JWT for enhanced security
+- Add rate limiting and CSRF protection
+- Restrict access by IP address or use a VPN
+- Regularly update dependencies for security patches
 - Consider using GitHub Actions for publishing instead of direct git commands
 
 ## API Endpoints
