@@ -9,6 +9,7 @@ services:
       - NODE_ENV=development
       - BLOG_EDITOR_USERNAME=${BLOG_EDITOR_USERNAME:-admin}
       - BLOG_EDITOR_PASSWORD=${BLOG_EDITOR_PASSWORD:-changeme}
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
       - GIT_CONFIG_COUNT=1
       - GIT_CONFIG_KEY_0=safe.directory
       - GIT_CONFIG_VALUE_0=/app/project

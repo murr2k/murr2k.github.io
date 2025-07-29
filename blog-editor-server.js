@@ -220,8 +220,23 @@ app.post('/api/publish', basicAuth, async (req, res) => {
     const unpushedCount = parseInt(unpushedCommits.trim()) || 0;
     
     if (commitMade || unpushedCount > 0) {
-      // Git push
-      const { stdout, stderr } = await execPromise('git push origin main');
+      // Git push with authentication
+      const githubToken = process.env.GITHUB_TOKEN;
+      let pushCommand = 'git push origin main';
+      
+      if (githubToken) {
+        // Get the remote URL
+        const { stdout: remoteUrl } = await execPromise('git remote get-url origin');
+        const url = remoteUrl.trim();
+        
+        // If it's an HTTPS URL, add the token
+        if (url.startsWith('https://')) {
+          const authUrl = url.replace('https://', `https://x-access-token:${githubToken}@`);
+          pushCommand = `git push ${authUrl} main`;
+        }
+      }
+      
+      const { stdout, stderr } = await execPromise(pushCommand);
       
       res.json({ 
         success: true, 
