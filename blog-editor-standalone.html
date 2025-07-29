@@ -33,6 +33,17 @@
             color: #2c3e50;
         }
         
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .publish-header-btn {
+            margin: 0;
+        }
+        
         .warning {
             background: #fff3cd;
             border: 1px solid #ffeeba;
@@ -40,6 +51,15 @@
             padding: 10px 15px;
             border-radius: 4px;
             margin-bottom: 30px;
+        }
+        
+        .info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
         }
         
         .editor-section {
@@ -245,10 +265,19 @@
 </head>
 <body>
     <div class="container">
-        <h1>Blog Editor</h1>
+        <div class="header-row">
+            <h1>Blog Editor</h1>
+            <button class="btn-success publish-header-btn" onclick="publishPost()">
+                Publish to GitHub
+            </button>
+        </div>
         
         <div class="warning" id="credentials-warning" style="display: none;">
             ⚠️ <strong>Warning:</strong> Using default credentials. Set environment variables for production security.
+        </div>
+        
+        <div id="publish-status" class="info" style="display: none;">
+            <span id="publish-status-text"></span>
         </div>
         
         <div class="tab-buttons">
@@ -348,6 +377,14 @@
                 messageDiv.textContent = '';
                 messageDiv.className = '';
             }, 5000);
+        }
+        
+        // Show publish reminder
+        function showPublishReminder() {
+            const statusDiv = document.getElementById('publish-status');
+            const statusText = document.getElementById('publish-status-text');
+            statusText.textContent = '💡 Remember to click "Publish to GitHub" to sync your changes with the live site.';
+            statusDiv.style.display = 'block';
         }
         
         // Format date for filename
@@ -457,6 +494,7 @@
                 if (response.ok) {
                     showMessage('Post saved successfully!', 'success');
                     document.getElementById('filename').value = filename;
+                    showPublishReminder();
                 } else {
                     const error = await response.text();
                     showMessage(`Error saving post: ${error}`, 'error');
@@ -468,25 +506,37 @@
         
         // Publish post
         async function publishPost() {
-            if (!document.getElementById('filename').value) {
-                showMessage('Please save the post first', 'error');
-                return;
-            }
-            
-            if (!confirm('Are you sure you want to publish this post to GitHub?')) {
+            if (!confirm('Publish all changes to GitHub?\n\nThis will sync all your local changes (including deletions) with the live site.')) {
                 return;
             }
             
             try {
+                const credentials = getCredentials();
+                if (!credentials) {
+                    showMessage('Authentication required', 'error');
+                    return;
+                }
+                
                 const response = await fetch('/api/publish', {
                     method: 'POST',
                     headers: {
-                        'Authorization': 'Basic ' + btoa(getCredentials())
+                        'Authorization': 'Basic ' + btoa(credentials)
                     }
                 });
                 
-                if (response.ok) {
-                    showMessage('Post published successfully!', 'success');
+                const result = await response.json();
+                
+                if (response.ok && result.success) {
+                    showMessage(result.message || 'Changes published successfully!', 'success');
+                    // Hide the publish reminder
+                    document.getElementById('publish-status').style.display = 'none';
+                } else if (response.ok && !result.success) {
+                    // Handle cases where nothing changed but it's not an error
+                    showMessage(result.message || 'No changes to publish', 'info');
+                    // Hide the reminder if everything is up to date
+                    if (result.message && result.message.includes('up to date')) {
+                        document.getElementById('publish-status').style.display = 'none';
+                    }
                 } else {
                     const error = await response.text();
                     showMessage(`Error publishing: ${error}`, 'error');
@@ -521,6 +571,7 @@
                 if (response.ok && result.success) {
                     showMessage(`Post "${title}" deleted successfully`, 'success');
                     loadPosts(); // Reload the posts list
+                    showPublishReminder();
                 } else {
                     throw new Error(result.error || result.message || 'Failed to delete post');
                 }
