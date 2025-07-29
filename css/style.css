@@ -839,3 +839,36 @@ footer {
         grid-template-columns: 1fr;
     }
 }
+
+/* Form Messages */
+.form-success-message,
+.form-error-message {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: 8px;
+    margin-bottom: var(--spacing-md);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    animation: slideIn 0.3s ease-out;
+}
+
+.form-success-message {
+    background-color: #10b981;
+    color: white;
+}
+
+.form-error-message {
+    background-color: #ef4444;
+    color: white;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

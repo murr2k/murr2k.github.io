@@ -113,27 +113,80 @@ document.addEventListener('DOMContentLoaded', () => {
     const contactForm = document.getElementById('contact-form');
     
     if (contactForm) {
+        // Add honeypot field for spam protection
+        const honeypot = document.createElement('input');
+        honeypot.type = 'text';
+        honeypot.name = 'honeypot';
+        honeypot.style.display = 'none';
+        honeypot.setAttribute('tabindex', '-1');
+        honeypot.setAttribute('autocomplete', 'off');
+        contactForm.appendChild(honeypot);
+        
         contactForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const formData = new FormData(contactForm);
             const formObject = Object.fromEntries(formData);
             
-            // Here you would normally send the form data to a server
-            // For now, we'll just show a success message
             const submitButton = contactForm.querySelector('button[type="submit"]');
             const originalText = submitButton.textContent;
             
             submitButton.textContent = 'Sending...';
             submitButton.disabled = true;
             
-            // Simulate sending
-            setTimeout(() => {
-                alert(`Thank you for your message, ${formObject.name}! I'll get back to you soon at ${formObject.email}.`);
-                contactForm.reset();
+            try {
+                // Use public endpoint - no API key needed
+                const API_URL = 'https://murr2k-form-handler.fly.dev/api/public/contact';
+                
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formObject)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok && result.success) {
+                    // Success message
+                    const successMessage = document.createElement('div');
+                    successMessage.className = 'form-success-message';
+                    successMessage.innerHTML = `
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        Thank you for your message! I'll get back to you soon.
+                    `;
+                    
+                    contactForm.parentNode.insertBefore(successMessage, contactForm);
+                    contactForm.reset();
+                    
+                    // Remove success message after 5 seconds
+                    setTimeout(() => {
+                        successMessage.remove();
+                    }, 5000);
+                } else {
+                    throw new Error(result.error || 'Failed to send message');
+                }
+            } catch (error) {
+                console.error('Form submission error:', error);
+                
+                // Error message
+                const errorMessage = document.createElement('div');
+                errorMessage.className = 'form-error-message';
+                errorMessage.textContent = 'Sorry, there was an error sending your message. Please try again later.';
+                
+                contactForm.parentNode.insertBefore(errorMessage, contactForm);
+                
+                // Remove error message after 5 seconds
+                setTimeout(() => {
+                    errorMessage.remove();
+                }, 5000);
+            } finally {
                 submitButton.textContent = originalText;
                 submitButton.disabled = false;
-            }, 1000);
+            }
         });
     }
     
