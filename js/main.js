@@ -240,9 +240,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load and display dynamic stats
     async function loadStats() {
         try {
+            console.log('Loading stats...');
             const response = await fetch('/stats-simple.json');
             if (response.ok) {
                 const stats = await response.json();
+                console.log('Stats loaded:', stats);
                 
                 // Update lines of code
                 const locElement = document.querySelector('.hero-stats .stat:nth-child(3) .stat-number');
@@ -267,7 +269,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         } catch (error) {
-            console.log('Could not load dynamic stats, using defaults');
+            console.error('Could not load dynamic stats:', error);
         }
     }
     
