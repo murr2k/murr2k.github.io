@@ -2,9 +2,19 @@ name: LOC Counter
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
 
 jobs:
   count:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - run: echo "Starting LOC counter"
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Test
+        run: echo "Starting LOC counter"
