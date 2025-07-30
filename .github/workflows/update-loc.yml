@@ -1,4 +1,4 @@
-name: Update Lines of Code
+name: Update LOC Stats
 
 on:
   schedule:
