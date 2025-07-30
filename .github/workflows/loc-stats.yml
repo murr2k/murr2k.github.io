@@ -15,9 +15,21 @@ jobs:
       
       - name: Setup
         run: |
-          wget -q https://github.com/XAMPPRocky/tokei/releases/latest/download/tokei-x86_64-unknown-linux-gnu.tar.gz
+          # Get latest tokei release
+          TOKEI_VERSION=$(curl -s https://api.github.com/repos/XAMPPRocky/tokei/releases/latest | grep '"tag_name"' | cut -d'"' -f4 | sed 's/^v//')
+          echo "Installing tokei version $TOKEI_VERSION"
+          
+          # Download and install
+          wget -q "https://github.com/XAMPPRocky/tokei/releases/download/v${TOKEI_VERSION}/tokei-x86_64-unknown-linux-gnu.tar.gz" || {
+            echo "Failed to download tokei"
+            exit 1
+          }
           tar xf tokei-x86_64-unknown-linux-gnu.tar.gz
           sudo mv tokei /usr/local/bin/
+          rm tokei-x86_64-unknown-linux-gnu.tar.gz
+          
+          # Verify installation
+          tokei --version
           
       - name: Count LOC
         env:
