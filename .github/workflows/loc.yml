@@ -11,15 +11,19 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Get all repositories
-          USERNAME=$(gh api /user -q .login)
+          # Use hardcoded username since we know this is murr2k's repo
+          USERNAME="murr2k"
           echo "Counting for $USERNAME..."
           
           # Clone and count each repo
           total=0
           count=0
           
-          for repo in $(gh api "/users/$USERNAME/repos?type=owner&per_page=100" --paginate -q '.[] | select(.fork == false) | .name'); do
+          # Get public repos without auth, filter out forks
+          repos=$(curl -s "https://api.github.com/users/$USERNAME/repos?type=owner&per_page=100")
+          
+          # Parse JSON to get non-forked repo names
+          for repo in $(echo "$repos" | grep -B2 '"fork": false' | grep '"name"' | cut -d'"' -f4); do
             echo "Processing $repo..."
             if git clone -q --depth 1 "https://github.com/$USERNAME/$repo" "/tmp/$repo" 2>/dev/null; then
               lines=$(find "/tmp/$repo" -type f \( -name "*.js" -o -name "*.ts" -o -name "*.py" -o -name "*.java" -o -name "*.go" -o -name "*.rb" -o -name "*.php" -o -name "*.c" -o -name "*.cpp" -o -name "*.h" -o -name "*.cs" -o -name "*.swift" -o -name "*.kt" -o -name "*.rs" -o -name "*.html" -o -name "*.css" -o -name "*.scss" -o -name "*.jsx" -o -name "*.tsx" -o -name "*.vue" \) 2>/dev/null | xargs wc -l 2>/dev/null | tail -1 | awk '{print $1}' || echo "0")
