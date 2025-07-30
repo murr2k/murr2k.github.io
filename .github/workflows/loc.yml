@@ -11,12 +11,37 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Quick test - just count this repo
-          lines=$(find . -name "*.js" -o -name "*.html" -o -name "*.css" | xargs wc -l | tail -1 | awk '{print $1}')
-          echo "Lines: $lines"
+          # Get all repositories
+          USERNAME=$(gh api /user -q .login)
+          echo "Counting for $USERNAME..."
+          
+          # Clone and count each repo
+          total=0
+          count=0
+          
+          for repo in $(gh api "/users/$USERNAME/repos?type=owner&per_page=100" --paginate -q '.[] | select(.fork == false) | .name'); do
+            echo "Processing $repo..."
+            if git clone -q --depth 1 "https://github.com/$USERNAME/$repo" "/tmp/$repo" 2>/dev/null; then
+              lines=$(find "/tmp/$repo" -type f \( -name "*.js" -o -name "*.ts" -o -name "*.py" -o -name "*.java" -o -name "*.go" -o -name "*.rb" -o -name "*.php" -o -name "*.c" -o -name "*.cpp" -o -name "*.h" -o -name "*.cs" -o -name "*.swift" -o -name "*.kt" -o -name "*.rs" -o -name "*.html" -o -name "*.css" -o -name "*.scss" -o -name "*.jsx" -o -name "*.tsx" -o -name "*.vue" \) 2>/dev/null | xargs wc -l 2>/dev/null | tail -1 | awk '{print $1}' || echo "0")
+              total=$((total + lines))
+              rm -rf "/tmp/$repo"
+            fi
+            count=$((count + 1))
+          done
+          
+          echo "Total: $total lines in $count repos"
+          
+          # Format
+          if [ $total -ge 1000000 ]; then
+            formatted="$((total/1000000))M+"
+          elif [ $total -ge 1000 ]; then
+            formatted="$((total/1000))K+"
+          else
+            formatted="${total}+"
+          fi
           
           # Update stats
-          echo "{\"lines_of_code\": $lines, \"repositories\": 1, \"last_updated\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\", \"formatted\": \"${lines}+\"}" > stats-simple.json
+          echo "{\"lines_of_code\": $total, \"repositories\": $count, \"last_updated\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\", \"formatted\": \"$formatted\"}" > stats-simple.json
           
           # Commit
           git config user.name 'github-actions[bot]'
