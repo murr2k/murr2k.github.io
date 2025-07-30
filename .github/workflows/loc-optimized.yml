@@ -1,0 +1,112 @@
+name: LOC Optimized
+on: 
+  push:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'  # Daily at midnight UTC
+
+jobs:
+  count:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install cloc
+        run: sudo apt-get update && sudo apt-get install -y cloc jq
+      
+      - name: Count all repositories
+        env:
+          GH_TOKEN: ${{ secrets.LOC_TOKEN || secrets.GITHUB_TOKEN }}
+        run: |
+          # Setup
+          USERNAME="murr2k"
+          total_lines=0
+          repo_count=0
+          
+          # Create temp directory
+          mkdir -p /tmp/repos
+          cd /tmp/repos
+          
+          # Configure git for private repos
+          git config --global url."https://${GH_TOKEN}@github.com/".insteadOf "https://github.com/"
+          
+          echo "Fetching repository list..."
+          
+          # Get all repos (public + private) with pagination
+          page=1
+          all_repos=""
+          while true; do
+            repos=$(curl -s -H "Authorization: token ${GH_TOKEN}" \
+              "https://api.github.com/user/repos?type=owner&per_page=100&page=$page")
+            
+            if [ "$(echo "$repos" | jq '. | length')" -eq 0 ]; then
+              break
+            fi
+            
+            all_repos="${all_repos}${repos}"
+            page=$((page + 1))
+          done
+          
+          # Process only non-forked repos
+          repo_names=$(echo "$all_repos" | jq -r '.[] | select(.fork == false) | .name' | sort -u)
+          total_repos=$(echo "$repo_names" | wc -l)
+          
+          echo "Found $total_repos non-forked repositories"
+          
+          # Clone and count each repo
+          for repo in $repo_names; do
+            echo "Processing $repo..."
+            
+            if git clone -q --depth 1 "https://github.com/$USERNAME/$repo" "$repo" 2>/dev/null; then
+              # Use cloc for accurate counting
+              repo_lines=$(cloc "$repo" --json 2>/dev/null | jq -r '.SUM.code // 0')
+              total_lines=$((total_lines + repo_lines))
+              echo "  $repo: $repo_lines lines"
+              rm -rf "$repo"
+              repo_count=$((repo_count + 1))
+            else
+              echo "  Failed to clone $repo"
+            fi
+          done
+          
+          echo "Total: $total_lines lines in $repo_count repositories"
+          
+          # Format number
+          if [ $total_lines -ge 1000000000 ]; then
+            formatted="$((total_lines/1000000000))B+"
+          elif [ $total_lines -ge 1000000 ]; then
+            formatted="$((total_lines/1000000))M+"
+          elif [ $total_lines -ge 1000 ]; then
+            formatted="$((total_lines/1000))K+"
+          else
+            formatted="${total_lines}+"
+          fi
+          
+          # Update stats file
+          cd $GITHUB_WORKSPACE
+          cat > stats-simple.json << EOF
+{
+  "lines_of_code": $total_lines,
+  "repositories": $repo_count,
+  "last_updated": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+  "formatted": "$formatted"
+}
+EOF
+          
+          # Cleanup
+          rm -rf /tmp/repos
+      
+      - name: Commit changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          
+          if git diff --quiet stats-simple.json; then
+            echo "No changes to commit"
+          else
+            git add stats-simple.json
+            git commit -m "📊 Update LOC stats: $formatted"
+            git push
+          fi

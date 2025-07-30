@@ -53,7 +53,9 @@
       "Bash(yamllint:*)",
       "Bash(git remote set-url:*)",
       "Bash(git pull:*)",
-      "WebFetch(domain:murr2k.github.io)"
+      "WebFetch(domain:murr2k.github.io)",
+      "Bash(gh run cancel:*)",
+      "WebFetch(domain:github.com)"
     ],
     "deny": []
   }
