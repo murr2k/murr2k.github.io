@@ -240,11 +240,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load and display dynamic stats
     async function loadStats() {
         try {
-            console.log('Loading stats...');
-            const response = await fetch('/stats-simple.json');
+            const response = await fetch('/stats-simple.json?t=' + Date.now());
             if (response.ok) {
                 const stats = await response.json();
-                console.log('Stats loaded:', stats);
                 
                 // Update lines of code
                 const locElement = document.querySelector('.hero-stats .stat:nth-child(3) .stat-number');
