@@ -181,11 +181,7 @@ EOF
             echo "No changes to commit"
           else
             git add stats-simple.json stats.json
-            git commit -m "🔄 Update lines of code stats
-
-            Lines of Code: $(jq -r .formatted stats-simple.json)
-            Repositories: $(jq -r .repositories stats-simple.json)
-            Last Updated: $(jq -r .last_updated stats-simple.json)"
+            git commit -m "🔄 Update lines of code stats [$(jq -r .formatted stats-simple.json) from $(jq -r .repositories stats-simple.json) repositories]"
             
             git push
             echo "Changes pushed successfully"
