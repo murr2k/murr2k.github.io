@@ -7,18 +7,55 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - run: |
-          echo "Counting lines..."
-          lines=$(find . -name "*.js" -o -name "*.html" -o -name "*.css" | xargs wc -l | tail -1 | awk '{print $1}')
-          echo "Found $lines lines"
-          formatted="${lines}+"
-          if [ $lines -ge 1000 ]; then
-            formatted="$((lines/1000))K+"
+      - name: Count all repositories
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Counting all repositories..."
+          
+          # Install jq
+          sudo apt-get update && sudo apt-get install -y jq
+          
+          # Get username
+          USERNAME=$(gh api /user | jq -r '.login')
+          echo "Counting for user: $USERNAME"
+          
+          # Get all non-forked repos
+          repos=$(gh api "/users/$USERNAME/repos?type=owner&per_page=100" --paginate | jq -r '.[] | select(.fork == false) | .name')
+          
+          total_lines=0
+          repo_count=0
+          
+          # Count lines in each repo
+          for repo in $repos; do
+            echo "Cloning $repo..."
+            if git clone -q --depth 1 "https://github.com/$USERNAME/$repo" "/tmp/$repo" 2>/dev/null; then
+              # Count code files
+              repo_lines=$(find "/tmp/$repo" -type f \( -name "*.js" -o -name "*.ts" -o -name "*.jsx" -o -name "*.tsx" -o -name "*.py" -o -name "*.java" -o -name "*.cpp" -o -name "*.c" -o -name "*.h" -o -name "*.cs" -o -name "*.php" -o -name "*.rb" -o -name "*.go" -o -name "*.rs" -o -name "*.swift" -o -name "*.kt" -o -name "*.scala" -o -name "*.r" -o -name "*.m" -o -name "*.html" -o -name "*.css" -o -name "*.scss" -o -name "*.vue" -o -name "*.svelte" \) 2>/dev/null | xargs wc -l 2>/dev/null | tail -1 | awk '{print $1}' || echo "0")
+              total_lines=$((total_lines + repo_lines))
+              echo "  $repo: $repo_lines lines"
+              rm -rf "/tmp/$repo"
+            fi
+            repo_count=$((repo_count + 1))
+          done
+          
+          echo "Total: $total_lines lines in $repo_count repositories"
+          
+          # Format the number
+          if [ $total_lines -ge 1000000000 ]; then
+            formatted="$((total_lines/1000000000))B+"
+          elif [ $total_lines -ge 1000000 ]; then
+            formatted="$((total_lines/1000000))M+"
+          elif [ $total_lines -ge 1000 ]; then
+            formatted="$((total_lines/1000))K+"
+          else
+            formatted="${total_lines}+"
           fi
+          
           cat > stats-simple.json << EOF
 {
-  "lines_of_code": $lines,
-  "repositories": 1,
+  "lines_of_code": $total_lines,
+  "repositories": $repo_count,
   "last_updated": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
   "formatted": "$formatted"
 }
