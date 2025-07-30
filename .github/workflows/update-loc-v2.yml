@@ -1,0 +1,128 @@
+name: Update Lines of Code
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/update-loc-v2.yml'
+
+jobs:
+  update-loc:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Install tokei
+        run: |
+          wget -q https://github.com/XAMPPRocky/tokei/releases/latest/download/tokei-x86_64-unknown-linux-gnu.tar.gz
+          tar xf tokei-x86_64-unknown-linux-gnu.tar.gz
+          sudo mv tokei /usr/local/bin/
+          rm tokei-x86_64-unknown-linux-gnu.tar.gz
+          echo "tokei version: $(tokei --version)"
+      
+      - name: Count lines of code
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Starting line counting process..."
+          
+          # Create temp directory
+          mkdir -p temp_repos
+          cd temp_repos
+          
+          # Get authenticated user
+          USERNAME=$(gh api /user | jq -r '.login')
+          echo "Counting repositories for user: $USERNAME"
+          
+          # Get all non-forked repos
+          gh api "/users/$USERNAME/repos?type=owner&per_page=100" --paginate | \
+            jq -r '.[] | select(.fork == false) | .clone_url' > repos.txt
+          
+          # Initialize counters
+          total_lines=0
+          repo_count=0
+          
+          # Count repositories
+          total_repos=$(wc -l < repos.txt)
+          echo "Found $total_repos non-forked repositories"
+          
+          # Process each repository
+          while IFS= read -r repo; do
+            if [ -z "$repo" ]; then
+              continue
+            fi
+            
+            repo_name=$(basename "$repo" .git)
+            echo "Processing: $repo_name"
+            
+            # Clone with depth 1
+            if git clone --depth 1 --quiet "$repo" "$repo_name" 2>/dev/null; then
+              # Run tokei
+              if tokei "$repo_name" --output json > "${repo_name}.json" 2>/dev/null; then
+                lines=$(jq -r '.Total.code // 0' "${repo_name}.json" 2>/dev/null || echo "0")
+                total_lines=$((total_lines + lines))
+                echo "  - Lines: $lines"
+              fi
+              rm -rf "$repo_name" "${repo_name}.json"
+            fi
+            
+            repo_count=$((repo_count + 1))
+          done < repos.txt
+          
+          # Format the number
+          if [ $total_lines -ge 1000000 ]; then
+            formatted=$(awk "BEGIN {printf \"%.0fM+\", $total_lines/1000000}")
+          elif [ $total_lines -ge 1000 ]; then
+            formatted=$(awk "BEGIN {printf \"%.0fK+\", $total_lines/1000}")
+          else
+            formatted="${total_lines}+"
+          fi
+          
+          echo "Total lines: $total_lines ($formatted)"
+          echo "Repositories: $repo_count"
+          
+          # Update stats files
+          cat > ../stats-simple.json << EOF
+{
+  "lines_of_code": $total_lines,
+  "repositories": $repo_count,
+  "last_updated": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+  "formatted": "$formatted"
+}
+EOF
+          
+          cat > ../stats.json << EOF
+{
+  "total_lines": $total_lines,
+  "repositories": $repo_count,
+  "last_updated": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+  "formatted": "$formatted",
+  "username": "$USERNAME"
+}
+EOF
+          
+          cd ..
+          rm -rf temp_repos
+      
+      - name: Commit and push changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          
+          if git diff --quiet stats-simple.json stats.json; then
+            echo "No changes to commit"
+          else
+            git add stats-simple.json stats.json
+            git commit -m "🔄 Update lines of code stats"
+            git push
+          fi
