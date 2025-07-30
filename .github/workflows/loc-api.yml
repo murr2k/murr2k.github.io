@@ -1,0 +1,103 @@
+name: LOC API
+on: 
+  push:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  count:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Count using GitHub API
+        env:
+          GH_TOKEN: ${{ secrets.LOC_TOKEN || secrets.GITHUB_TOKEN }}
+        run: |
+          # Setup
+          USERNAME="murr2k"
+          total_size=0
+          total_lines=0
+          repo_count=0
+          
+          echo "Fetching repository data via API..."
+          
+          # Get all repos (public + private) with pagination
+          page=1
+          while true; do
+            repos=$(curl -s -H "Authorization: token ${GH_TOKEN}" \
+              "https://api.github.com/user/repos?type=owner&per_page=100&page=$page")
+            
+            # Break if no more repos
+            if [ "$(echo "$repos" | jq '. | length')" -eq 0 ]; then
+              break
+            fi
+            
+            # Process each non-forked repo
+            echo "$repos" | jq -r '.[] | select(.fork == false) | @json' | while IFS= read -r repo_json; do
+              repo_name=$(echo "$repo_json" | jq -r '.name')
+              repo_size=$(echo "$repo_json" | jq -r '.size // 0')  # Size in KB
+              repo_language=$(echo "$repo_json" | jq -r '.language // "Unknown"')
+              
+              echo "Processing $repo_name (${repo_size}KB, $repo_language)"
+              
+              # Get language statistics for better line estimation
+              lang_stats=$(curl -s -H "Authorization: token ${GH_TOKEN}" \
+                "https://api.github.com/repos/$USERNAME/$repo_name/languages")
+              
+              # Sum bytes from all languages
+              total_bytes=$(echo "$lang_stats" | jq '[.[]] | add // 0')
+              
+              # Estimate lines: ~40 bytes per line on average for code
+              if [ "$total_bytes" -gt 0 ]; then
+                estimated_lines=$((total_bytes / 40))
+                total_lines=$((total_lines + estimated_lines))
+                echo "  Estimated $estimated_lines lines from ${total_bytes} bytes"
+              fi
+              
+              total_size=$((total_size + repo_size))
+              repo_count=$((repo_count + 1))
+            done
+            
+            page=$((page + 1))
+          done
+          
+          echo "Total: $total_lines estimated lines in $repo_count repositories"
+          echo "Total size: ${total_size}KB"
+          
+          # Format number
+          if [ $total_lines -ge 1000000000 ]; then
+            formatted="$((total_lines/1000000000))B+"
+          elif [ $total_lines -ge 1000000 ]; then
+            formatted="$((total_lines/1000000))M+"
+          elif [ $total_lines -ge 1000 ]; then
+            formatted="$((total_lines/1000))K+"
+          else
+            formatted="${total_lines}+"
+          fi
+          
+          # Save stats
+          cat > stats-simple.json << EOF
+{
+  "lines_of_code": $total_lines,
+  "repositories": $repo_count,
+  "last_updated": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+  "formatted": "$formatted"
+}
+EOF
+          
+      - name: Commit changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          
+          if git diff --quiet stats-simple.json; then
+            echo "No changes to commit"
+          else
+            git add stats-simple.json
+            git commit -m "📊 Update LOC stats: $formatted"
+            git push
+          fi
