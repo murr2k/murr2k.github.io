@@ -1,0 +1,54 @@
+name: Stats
+on: [push]
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          # Use API to count
+          TOKEN="${{ secrets.LOC_TOKEN }}"
+          if [ -z "$TOKEN" ]; then
+            echo "Using public API only"
+            TOKEN=""
+            AUTH=""
+          else
+            echo "Using authenticated API"
+            AUTH="-H \"Authorization: token $TOKEN\""
+          fi
+          
+          # Get repo count and total size
+          if [ -n "$TOKEN" ]; then
+            data=$(curl -s -H "Authorization: token $TOKEN" "https://api.github.com/users/murr2k/repos?type=owner&per_page=100")
+          else
+            data=$(curl -s "https://api.github.com/users/murr2k/repos?type=owner&per_page=100")
+          fi
+          
+          # Count non-forked repos and estimate lines
+          repo_count=$(echo "$data" | grep -c '"fork": false')
+          
+          # Simple estimate: 500 lines per MB on average
+          total_size_kb=$(echo "$data" | grep '"size":' | grep -o '[0-9]*' | awk '{sum+=$1} END {print sum}')
+          total_lines=$((total_size_kb * 500 / 1024))
+          
+          echo "Repos: $repo_count, Size: ${total_size_kb}KB, Est lines: $total_lines"
+          
+          # Format
+          if [ $total_lines -ge 1000000 ]; then
+            formatted="$((total_lines/1000000))M+"
+          elif [ $total_lines -ge 1000 ]; then
+            formatted="$((total_lines/1000))K+"
+          else
+            formatted="${total_lines}+"
+          fi
+          
+          # Update file
+          echo "{\"lines_of_code\": $total_lines, \"repositories\": $repo_count, \"last_updated\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\", \"formatted\": \"$formatted\"}" > stats-simple.json
+          
+          # Commit
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add stats-simple.json
+          git diff --staged --quiet || (git commit -m "📊 Update: $formatted" && git push)
