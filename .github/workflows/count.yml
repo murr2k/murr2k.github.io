@@ -1,4 +1,4 @@
-name: LOC Optimized
+name: Count
 on: 
   push:
   workflow_dispatch:
