@@ -1,7 +1,20 @@
 name: Test Workflow
-on: [push]
+on: [push, workflow_dispatch]
 jobs:
   test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - run: echo "Hello"
+      - uses: actions/checkout@v4
+      - run: |
+          echo "Counting lines..."
+          lines=$(find . -name "*.js" -o -name "*.html" -o -name "*.css" | xargs wc -l | tail -1 | awk '{print $1}')
+          echo "Found $lines lines"
+          echo "{\"lines_of_code\": $lines, \"formatted\": \"${lines}+\"}" > stats-simple.json
+      - run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add stats-simple.json || true
+          git commit -m "Update stats" || true
+          git push || true
