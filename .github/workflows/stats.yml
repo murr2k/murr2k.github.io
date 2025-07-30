@@ -19,21 +19,47 @@ jobs:
             AUTH="-H \"Authorization: token $TOKEN\""
           fi
           
-          # Get repo count and total size
-          if [ -n "$TOKEN" ]; then
-            data=$(curl -s -H "Authorization: token $TOKEN" "https://api.github.com/users/murr2k/repos?type=owner&per_page=100")
-          else
-            data=$(curl -s "https://api.github.com/users/murr2k/repos?type=owner&per_page=100")
-          fi
+          # Get all repos with pagination
+          all_repos=""
+          page=1
+          while true; do
+            if [ -n "$TOKEN" ]; then
+              repos=$(curl -s -H "Authorization: token $TOKEN" "https://api.github.com/user/repos?type=owner&per_page=100&page=$page")
+            else
+              repos=$(curl -s "https://api.github.com/users/murr2k/repos?type=owner&per_page=100&page=$page")
+            fi
+            
+            if [ "$(echo "$repos" | grep -c '"name"')" -eq 0 ]; then
+              break
+            fi
+            
+            all_repos="${all_repos}${repos}"
+            page=$((page + 1))
+          done
           
-          # Count non-forked repos and estimate lines
-          repo_count=$(echo "$data" | grep -c '"fork": false')
+          # Count non-forked repos
+          repo_count=$(echo "$all_repos" | grep -B2 '"fork": false' | grep -c '"name"')
           
-          # Simple estimate: 500 lines per MB on average
-          total_size_kb=$(echo "$data" | grep '"size":' | grep -o '[0-9]*' | awk '{sum+=$1} END {print sum}')
-          total_lines=$((total_size_kb * 500 / 1024))
+          # Get total bytes from languages API for each repo
+          total_bytes=0
+          echo "$all_repos" | grep -B2 '"fork": false' | grep '"name"' | cut -d'"' -f4 | while read repo; do
+            echo "Checking $repo..."
+            if [ -n "$TOKEN" ]; then
+              lang_bytes=$(curl -s -H "Authorization: token $TOKEN" "https://api.github.com/repos/murr2k/$repo/languages" | grep -o '[0-9]*' | awk '{sum+=$1} END {print sum}')
+            else
+              lang_bytes=$(curl -s "https://api.github.com/repos/murr2k/$repo/languages" | grep -o '[0-9]*' | awk '{sum+=$1} END {print sum}')
+            fi
+            total_bytes=$((total_bytes + lang_bytes))
+            echo "  $lang_bytes bytes"
+          done > /tmp/repo_sizes.txt
           
-          echo "Repos: $repo_count, Size: ${total_size_kb}KB, Est lines: $total_lines"
+          # Sum up total bytes
+          total_bytes=$(cat /tmp/repo_sizes.txt | grep "bytes" | grep -o '[0-9]*' | awk '{sum+=$1} END {print sum}')
+          
+          # Estimate lines: ~35 bytes per line average for code
+          total_lines=$((total_bytes / 35))
+          
+          echo "Repos: $repo_count, Bytes: $total_bytes, Est lines: $total_lines"
           
           # Format
           if [ $total_lines -ge 1000000 ]; then
