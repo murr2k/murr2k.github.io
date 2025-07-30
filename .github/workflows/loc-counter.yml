@@ -12,7 +12,11 @@ jobs:
           sudo apt-get update && sudo apt-get install -y cloc
           
           # Quick test with this repo
-          lines=$(cloc . --json | grep -o '"code" : [0-9]*' | grep -o '[0-9]*')
+          cloc_output=$(cloc . --json 2>/dev/null)
+          lines=$(echo "$cloc_output" | grep -o '"code" : [0-9]*' | grep -o '[0-9]*' | head -1)
+          if [ -z "$lines" ]; then
+            lines=0
+          fi
           echo "This repo: $lines lines"
           
           # Save stats
