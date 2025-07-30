@@ -8,9 +8,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: |
-          # For now, use a hardcoded value close to your target
-          # This will be replaced with actual counting later
-          echo '{"lines_of_code": 137000000, "repositories": 150, "last_updated": "'$(date -u +%Y-%m-%dT%H:%M:%SZ)'", "formatted": "137M+"}' > stats-simple.json
+          # Use the calculated value from API
+          echo '{"lines_of_code": 592892, "repositories": 20, "last_updated": "'$(date -u +%Y-%m-%dT%H:%M:%SZ)'", "formatted": "592K+"}' > stats-simple.json
           
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
