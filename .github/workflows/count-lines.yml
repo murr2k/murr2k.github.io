@@ -1,7 +1,9 @@
 name: Count Lines
 
 on:
+  # Manual trigger
   workflow_dispatch:
+  # Daily at midnight UTC  
   schedule:
     - cron: '0 0 * * *'
 
