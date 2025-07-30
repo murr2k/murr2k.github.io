@@ -1,0 +1,10 @@
+name: LOC Counter
+
+on:
+  workflow_dispatch:
+
+jobs:
+  count:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Starting LOC counter"
