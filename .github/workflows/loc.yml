@@ -10,7 +10,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Count
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.LOC_TOKEN || secrets.GITHUB_TOKEN }}
         run: |
           # Use hardcoded username since we know this is murr2k's repo
           USERNAME="murr2k"
